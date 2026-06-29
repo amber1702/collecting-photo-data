@@ -1,31 +1,29 @@
-// ======================================
+// =============================================
 // Collecting Photo Data
+// script.js
 // Part 1
 // Camera + GPS + Compass
-// ======================================
+// =============================================
 
-// ===============================
+// =============================================
 // Google Apps Script URL
-// ===============================
+// =============================================
 
 const SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbzB63wfVhXxiI7clm9vpTrglFhKdYIduNOLeC4B27sMHoJ8sg4f8j5VspdIgzhEhRr1/exec";
+"https://script.google.com/macros/s/AKfycbzxyKU7ZzTOodRtMC2LPnKO7MjvP1zht_F5Ju15a4O80xyqD-1iQfhCn-Mt9ntX_S7B/exec";
 
 
-// ===============================
+// =============================================
 // HTML Elements
-// ===============================
+// =============================================
 
 const video = document.getElementById("video");
-
 const canvas = document.getElementById("canvas");
 
 const latitude = document.getElementById("lat");
-
 const longitude = document.getElementById("lon");
 
 const headingText = document.getElementById("heading");
-
 const directionText = document.getElementById("direction");
 
 const headingValue =
@@ -41,21 +39,22 @@ const enableCompassButton =
 document.getElementById("enableCompass");
 
 
-// ===============================
+// =============================================
 // Camera
-// ===============================
+// =============================================
 
-async function startCamera(){
+async function startCamera() {
 
     if (!window.isSecureContext) {
 
-        alert("Please open the app using HTTPS.");
+        alert("Please open using HTTPS.");
 
         return;
 
     }
 
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    if (!navigator.mediaDevices ||
+        !navigator.mediaDevices.getUserMedia) {
 
         alert("Camera API is unavailable.");
 
@@ -63,18 +62,34 @@ async function startCamera(){
 
     }
 
-    try{
+    try {
 
         const stream =
         await navigator.mediaDevices.getUserMedia({
 
-            video:{
-                facingMode:{
-                    ideal:"environment"
+            video: {
+
+                facingMode: {
+
+                    ideal: "environment"
+
+                },
+
+                width: {
+
+                    ideal: 512
+
+                },
+
+                height: {
+
+                    ideal: 512
+
                 }
+
             },
 
-            audio:false
+            audio: false
 
         });
 
@@ -86,7 +101,7 @@ async function startCamera(){
 
     }
 
-    catch(err){
+    catch (err) {
 
         console.error(err);
 
@@ -99,11 +114,11 @@ async function startCamera(){
 startCamera();
 
 
-// ===============================
+// =============================================
 // GPS
-// ===============================
+// =============================================
 
-function updateLocation(position){
+function updateLocation(position) {
 
     latitude.textContent =
     position.coords.latitude.toFixed(6);
@@ -113,13 +128,13 @@ function updateLocation(position){
 
 }
 
-function locationError(error){
+function locationError(error) {
 
-    console.log(error);
+    console.error(error);
 
 }
 
-if(navigator.geolocation){
+if (navigator.geolocation) {
 
     navigator.geolocation.watchPosition(
 
@@ -129,11 +144,11 @@ if(navigator.geolocation){
 
         {
 
-            enableHighAccuracy:true,
+            enableHighAccuracy: true,
 
-            timeout:5000,
+            timeout: 5000,
 
-            maximumAge:1000
+            maximumAge: 1000
 
         }
 
@@ -142,31 +157,31 @@ if(navigator.geolocation){
 }
 
 
-// ===============================
-// Direction
-// ===============================
+// =============================================
+// Convert Heading -> Direction
+// =============================================
 
-function getDirection(angle){
+function getDirection(angle) {
 
-    if(angle>=337.5 || angle<22.5)
+    if (angle >= 337.5 || angle < 22.5)
         return "N";
 
-    if(angle<67.5)
+    if (angle < 67.5)
         return "NE";
 
-    if(angle<112.5)
+    if (angle < 112.5)
         return "E";
 
-    if(angle<157.5)
+    if (angle < 157.5)
         return "SE";
 
-    if(angle<202.5)
+    if (angle < 202.5)
         return "S";
 
-    if(angle<247.5)
+    if (angle < 247.5)
         return "SW";
 
-    if(angle<292.5)
+    if (angle < 292.5)
         return "W";
 
     return "NW";
@@ -174,11 +189,11 @@ function getDirection(angle){
 }
 
 
-// ===============================
+// =============================================
 // Update Compass UI
-// ===============================
+// =============================================
 
-function updateCompass(heading){
+function updateCompass(heading) {
 
     headingText.textContent =
     heading.toFixed(1) + "°";
@@ -186,14 +201,14 @@ function updateCompass(heading){
     directionText.textContent =
     getDirection(heading);
 
-    if(headingValue){
+    if (headingValue) {
 
         headingValue.textContent =
         heading.toFixed(0) + "°";
 
     }
 
-    if(arrow){
+    if (arrow) {
 
         arrow.style.transform =
         `translateX(-50%) rotate(${heading}deg)`;
@@ -203,22 +218,23 @@ function updateCompass(heading){
 }
 
 
-// ===============================
+// =============================================
 // Android Compass
-// ===============================
+// =============================================
 
-function handleAndroidCompass(event){
+function handleAndroidCompass(event) {
 
-    if(event.alpha==null)
+    if (event.alpha == null)
         return;
 
-    let heading = 360 - event.alpha;
+    const heading =
+    (360 - event.alpha + 360) % 360;
 
     updateCompass(heading);
 
 }
 
-if("ondeviceorientationabsolute" in window){
+if ("ondeviceorientationabsolute" in window) {
 
     window.addEventListener(
 
@@ -231,7 +247,7 @@ if("ondeviceorientationabsolute" in window){
     );
 
 }
-else{
+else {
 
     window.addEventListener(
 
@@ -246,28 +262,30 @@ else{
 }
 
 
-// ===============================
+// =============================================
 // iPhone Compass
-// ===============================
+// =============================================
 
-async function enableCompassIOS(){
+async function enableCompassIOS() {
 
-    if(
+    if (
 
         typeof DeviceOrientationEvent !== "undefined"
 
         &&
 
-        typeof DeviceOrientationEvent.requestPermission==="function"
+        typeof DeviceOrientationEvent
+            .requestPermission === "function"
 
-    ){
+    ) {
 
-        try{
+        try {
 
             const permission =
-            await DeviceOrientationEvent.requestPermission();
+            await DeviceOrientationEvent
+                .requestPermission();
 
-            if(permission==="granted"){
+            if (permission === "granted") {
 
                 window.addEventListener(
 
@@ -281,11 +299,17 @@ async function enableCompassIOS(){
 
             }
 
+            else {
+
+                alert("Compass permission denied.");
+
+            }
+
         }
 
-        catch(err){
+        catch (err) {
 
-            console.log(err);
+            console.error(err);
 
         }
 
@@ -293,24 +317,25 @@ async function enableCompassIOS(){
 
 }
 
-function handleIOSCompass(event){
+function handleIOSCompass(event) {
 
-    if(event.webkitCompassHeading==null)
+    if (event.webkitCompassHeading == null)
         return;
 
-    const heading =
-    event.webkitCompassHeading;
+    updateCompass(
 
-    updateCompass(heading);
+        event.webkitCompassHeading
+
+    );
 
 }
 
 
-// ===============================
+// =============================================
 // Enable Compass Button
-// ===============================
+// =============================================
 
-if(enableCompassButton){
+if (enableCompassButton) {
 
     enableCompassButton.addEventListener(
 
@@ -322,16 +347,154 @@ if(enableCompassButton){
 
 }
 
-// ======================================
+// =============================================
 // Part 2
-// Capture + Upload
-// ======================================
+// Capture Photo
+// =============================================
+
+captureButton.addEventListener(
+
+    "click",
+
+    async function () {
+
+        // Không cho bấm liên tục
+
+        captureButton.disabled = true;
+
+        captureButton.style.opacity = "0.7";
+
+        captureButton.innerHTML = `
+
+            <span class="material-symbols-outlined">
+
+                photo_camera
+
+            </span>
+
+            Capturing...
+
+        `;
+
+        try {
+
+            // =============================================
+            // Resize về 512x512
+            // =============================================
+
+            canvas.width = 512;
+
+            canvas.height = 512;
+
+            const ctx = canvas.getContext("2d");
+
+            ctx.drawImage(
+
+                video,
+
+                0,
+
+                0,
+
+                512,
+
+                512
+
+            );
+
+            // =============================================
+            // Convert sang JPEG Base64
+            // =============================================
+
+            const imageBase64 =
+
+                canvas
+
+                .toDataURL(
+
+                    "image/jpeg",
+
+                    0.9
+
+                )
+
+                .split(",")[1];
+
+            // =============================================
+            // Upload
+            // =============================================
+
+            await uploadToDrive(
+
+                imageBase64
+
+            );
+
+        }
+
+        catch(err){
+
+            console.error(err);
+
+            captureButton.innerHTML = `
+
+                <span class="material-symbols-outlined">
+
+                    error
+
+                </span>
+
+                Capture Failed
+
+            `;
+
+            setTimeout(()=>{
+
+                captureButton.disabled = false;
+
+                captureButton.style.opacity = "1";
+
+                captureButton.innerHTML = `
+
+                    <span class="material-symbols-outlined">
+
+                        photo_camera
+
+                    </span>
+
+                    Capture Photo
+
+                `;
+
+            },2000);
+
+        }
+
+    }
+
+);
+
+
+// =============================================
+// Part 3
+// Upload to Google Drive
+// =============================================
 
 async function uploadToDrive(imageBase64){
 
+    // =============================
+    // Check Internet
+    // =============================
+
     if(!navigator.onLine){
+
         throw new Error("No Internet Connection");
+
     }
+
+    // =============================
+    // Prepare Payload
+    // =============================
 
     const payload = {
 
@@ -349,134 +512,77 @@ async function uploadToDrive(imageBase64){
 
     };
 
-    try{
+    // =============================
+    // Uploading UI
+    // =============================
 
-        const response = await fetch(SCRIPT_URL,{
+    captureButton.innerHTML = `
 
-            method:"POST",
+        <span class="material-symbols-outlined">
 
-            headers:{
-                "Content-Type":"application/json"
-            },
+            cloud_upload
 
-            body:JSON.stringify(payload)
+        </span>
 
-        });
+        Uploading...
 
-        console.log("HTTP Status:",response.status);
-
-        const text = await response.text();
-
-        console.log("Server Response:");
-
-        console.log(text);
-
-        if(!response.ok){
-
-            throw new Error("HTTP "+response.status);
-
-        }
-
-        const result = JSON.parse(text);
-
-        if(result.success){
-
-            alert("✅ Uploaded Successfully");
-
-        }
-
-        else{
-
-            alert(result.error);
-
-        }
-
-    }
-
-    catch(err){
-
-        console.error(err);
-
-        alert(err);
-
-    }
-
-}
-
-// ======================================
-// Part 3
-// Upload Status
-// ======================================
-
-async function uploadToDrive(imageBase64){
-
-    if(!navigator.onLine){
-
-        throw new Error("No Internet Connection");
-
-    }
-
-    const payload={
-
-        image:imageBase64,
-
-        latitude:latitude.textContent,
-
-        longitude:longitude.textContent,
-
-        heading:headingText.textContent,
-
-        direction:directionText.textContent,
-
-        timestamp:new Date().toISOString()
-
-    };
-
-    captureButton.disabled=true;
-
-    captureButton.style.opacity="0.7";
-
-    captureButton.innerHTML=`
-    <span class="material-symbols-outlined">
-    cloud_upload
-    </span>
-    Uploading...
     `;
 
     try{
 
-        const response=await fetch(
+        // =============================
+        // Send POST Request
+        // =============================
+
+        const response = await fetch(
 
             SCRIPT_URL,
 
             {
 
-                method:"POST",
+                method: "POST",
 
                 headers:{
 
-                    "Content-Type":"application/json"
+                    "Content-Type":"text/plain;charset=utf-8"
 
                 },
 
-                body:JSON.stringify(payload)
+                body: JSON.stringify(payload)
 
             }
 
         );
 
-        const result=await response.json();
+        // =============================
+        // Read Response
+        // =============================
 
-        console.log(result);
+        const text = await response.text();
+
+        console.log(text);
+
+        const result = JSON.parse(text);
+
+        // =============================
+        // Upload Success
+        // =============================
 
         if(result.success){
 
-            captureButton.innerHTML=`
-            <span class="material-symbols-outlined">
-            check_circle
-            </span>
-            Uploaded
+            captureButton.innerHTML = `
+
+                <span class="material-symbols-outlined">
+
+                    check_circle
+
+                </span>
+
+                Uploaded
+
             `;
+
+            console.log("Saved:",result.filename);
 
         }
 
@@ -492,30 +598,44 @@ async function uploadToDrive(imageBase64){
 
         console.error(err);
 
-        captureButton.innerHTML=`
-        <span class="material-symbols-outlined">
-        error
-        </span>
-        Upload Failed
+        alert(err.message);
+
+        captureButton.innerHTML = `
+
+            <span class="material-symbols-outlined">
+
+                error
+
+            </span>
+
+            Upload Failed
+
         `;
 
     }
 
+    // =============================
+    // Restore Button
+    // =============================
+
     setTimeout(()=>{
 
-        captureButton.disabled=false;
+        captureButton.disabled = false;
 
-        captureButton.style.opacity="1";
+        captureButton.style.opacity = "1";
 
-        captureButton.innerHTML=`
-        <span class="material-symbols-outlined">
-        photo_camera
-        </span>
-        Capture Photo
+        captureButton.innerHTML = `
+
+            <span class="material-symbols-outlined">
+
+                photo_camera
+
+            </span>
+
+            Capture Photo
+
         `;
 
     },2000);
 
 }
-
-

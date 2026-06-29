@@ -19,81 +19,19 @@
 
 <body>
 
-    <div class="container">
+    <div class="header">
 
-        <h1>Collecting Photo Data</h1>
+        <div class="title-section">
 
-        <p class="subtitle">
-            Indoor Semantic Mapping Dataset Collection
-        </p>
+            <h1>Collecting Photo Data</h1>
 
-        <!-- Camera -->
-        <video
-            id="video"
-            autoplay
-            muted
-            playsinline>
-        </video>
-
-        <canvas id="canvas"></canvas>
-
-        <!-- GPS + Heading -->
-
-        <div class="info">
-
-            <p>
-
-                <span class="material-symbols-outlined icon">
-                    location_on
-                </span>
-
-                <strong>Latitude</strong>
-
-                <span id="lat">--</span>
-
-            </p>
-
-            <p>
-
-                <span class="material-symbols-outlined icon">
-                    explore
-                </span>
-
-                <strong>Longitude</strong>
-
-                <span id="lon">--</span>
-
-            </p>
-
-            <p>
-
-                <span class="material-symbols-outlined icon">
-                    navigation
-                </span>
-
-                <strong>Heading</strong>
-
-                <span id="heading">--</span>
-
-            </p>
-
-            <p>
-
-                <span class="material-symbols-outlined icon">
-                    near_me
-                </span>
-
-                <strong>Direction</strong>
-
-                <span id="direction">--</span>
-
+            <p class="subtitle">
+                Indoor Semantic Mapping Dataset Collection
             </p>
 
         </div>
 
-        <!-- Compass -->
-
-        <div class="compass-container">
+        <div class="mini-compass">
 
             <div class="compass">
 
@@ -111,42 +49,106 @@
                 </div>
 
                 <div class="north">N</div>
-
                 <div class="east">E</div>
-
                 <div class="south">S</div>
-
                 <div class="west">W</div>
 
             </div>
 
         </div>
 
+    </div>
+
+    <video
+        id="video"
+        autoplay
+        muted
+        playsinline>
+    </video>
+
+    <canvas id="canvas"></canvas>
+
+        <!-- GPS + Heading -->
+
+        <div class="info">
+
+            <div class="card">
+
+                <span class="material-symbols-outlined">
+                    location_on
+                </span>
+
+                <label>Lat</label>
+
+                <span id="lat">--</span>
+
+            </div>
+
+            <div class="card">
+
+                <span class="material-symbols-outlined">
+                    explore
+                </span>
+
+                <label>Lon</label>
+
+                <span id="lon">--</span>
+
+            </div>
+
+            <div class="card">
+
+                <span class="material-symbols-outlined">
+                    navigation
+                </span>
+
+                <label>Heading</label>
+
+                <span id="heading">--</span>
+
+            </div>
+
+            <div class="card">
+
+                <span class="material-symbols-outlined">
+                    near_me
+                </span>
+
+                <label>Direction</label>
+
+                <span id="direction">--</span>
+
+            </div>
+
+        </div>
+
+
+
         <!-- Buttons -->
 
-        <button id="enableCompass">
+        <div class="button-row">
 
-            <span class="material-symbols-outlined">
+            <button id="enableCompass">
 
-                explore
+                <span class="material-symbols-outlined">
+                    explore
+                </span>
 
-            </span>
+                Enable Compass
 
-            Enable Compass
+            </button>
 
-        </button>
+            <button id="capture">
 
-        <button id="capture">
+                <span class="material-symbols-outlined">
+                    photo_camera
+                </span>
 
-            <span class="material-symbols-outlined">
+                Capture Photo
 
-                photo_camera
+            </button>
 
-            </span>
-
-            Capture Photo
-
-        </button>
+        </div>
 
         <!-- Footer -->
 

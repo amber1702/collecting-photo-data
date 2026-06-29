@@ -9,7 +9,7 @@
 // ===============================
 
 const SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbxfIJXfoJiOjqK5d-_juiS6CFdJQUCG6ARPkVjnTX9KKBLesuvqiTOaqg-k_nYYdhDQNA/exec";
+"https://script.google.com/macros/s/AKfycby17Z5KyQexw3UXxN7m6pGE-NMYzV2yLdIrIOeIaBXmeOh9QclO-hh4Sc8-CusaRT9b/exec";
 
 
 // ===============================
@@ -327,43 +327,69 @@ if(enableCompassButton){
 // Capture + Upload
 // ======================================
 
-// ===============================
-// Capture Button
-// ===============================
+async function uploadToDrive(imageBase64){
 
-captureButton.addEventListener(
-
-    "click",
-
-    capturePhoto
-
-);
-
-
-// ===============================
-// Capture Photo
-// ===============================
-
-async function capturePhoto(){
-
-    if(video.videoWidth===0){
-
-        alert("Camera is not ready.");
-
-        return;
-
+    if(!navigator.onLine){
+        throw new Error("No Internet Connection");
     }
 
-    captureButton.disabled=true;
+    const payload = {
 
-    captureButton.innerHTML="Uploading...";
+        image: imageBase64,
+
+        latitude: latitude.textContent,
+
+        longitude: longitude.textContent,
+
+        heading: headingText.textContent,
+
+        direction: directionText.textContent,
+
+        timestamp: new Date().toISOString()
+
+    };
 
     try{
 
-        const imageBase64 =
-        captureSquareImage();
+        const response = await fetch(SCRIPT_URL,{
 
-        await uploadToDrive(imageBase64);
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify(payload)
+
+        });
+
+        console.log("HTTP Status:",response.status);
+
+        const text = await response.text();
+
+        console.log("Server Response:");
+
+        console.log(text);
+
+        if(!response.ok){
+
+            throw new Error("HTTP "+response.status);
+
+        }
+
+        const result = JSON.parse(text);
+
+        if(result.success){
+
+            alert("✅ Uploaded Successfully");
+
+        }
+
+        else{
+
+            alert(result.error);
+
+        }
 
     }
 
@@ -371,153 +397,7 @@ async function capturePhoto(){
 
         console.error(err);
 
-        alert("Capture failed.");
-
-    }
-
-    captureButton.disabled=false;
-
-    captureButton.innerHTML=`
-    <span class="material-symbols-outlined">
-    photo_camera
-    </span>
-    Capture Photo
-    `;
-
-}
-
-
-
-// ===============================
-// Crop Center
-// 512x512
-// ===============================
-
-function captureSquareImage(){
-
-    const ctx =
-    canvas.getContext("2d");
-
-    canvas.width=512;
-    canvas.height=512;
-
-    const videoWidth=
-    video.videoWidth;
-
-    const videoHeight=
-    video.videoHeight;
-
-    const cropSize=
-    Math.min(videoWidth,videoHeight);
-
-    const sx=
-    (videoWidth-cropSize)/2;
-
-    const sy=
-    (videoHeight-cropSize)/2;
-
-    ctx.drawImage(
-
-        video,
-
-        sx,
-
-        sy,
-
-        cropSize,
-
-        cropSize,
-
-        0,
-
-        0,
-
-        512,
-
-        512
-
-    );
-
-    const imageData=
-    canvas.toDataURL(
-
-        "image/jpeg",
-
-        0.85
-
-    );
-
-    return imageData.split(",")[1];
-
-}
-
-
-
-// ===============================
-// Upload
-// ===============================
-
-async function uploadToDrive(imageBase64){
-
-    const payload={
-
-        image:imageBase64,
-
-        latitude:latitude.textContent,
-
-        longitude:longitude.textContent,
-
-        heading:headingText.textContent,
-
-        direction:directionText.textContent,
-
-        timestamp:new Date().toISOString()
-
-    };
-
-    const response=
-    await fetch(
-
-        SCRIPT_URL,
-
-        {
-
-            method:"POST",
-
-            headers:{
-
-                "Content-Type":"application/json"
-
-            },
-
-            body:JSON.stringify(payload)
-
-        }
-
-    );
-
-    const result=
-    await response.json();
-
-    console.log(result);
-
-    if(result.success){
-
-        alert(
-
-            "✅ Uploaded Successfully!"
-
-        );
-
-    }
-
-    else{
-
-        alert(
-
-            result.error
-
-        );
+        alert(err);
 
     }
 

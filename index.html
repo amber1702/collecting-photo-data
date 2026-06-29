@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Collecting Photo Data</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Collecting Photo Data</h1>
+
+        <p class="subtitle">
+            Indoor Semantic Mapping Dataset Collection
+        </p>
+
+        <!-- Camera -->
+        <video
+            id="video"
+            autoplay
+            muted
+            playsinline>
+        </video>
+
+        <canvas id="canvas"></canvas>
+
+        <!-- GPS + Heading -->
+
+        <div class="info">
+
+            <p>
+
+                <span class="material-symbols-outlined icon">
+                    location_on
+                </span>
+
+                <strong>Latitude</strong>
+
+                <span id="lat">--</span>
+
+            </p>
+
+            <p>
+
+                <span class="material-symbols-outlined icon">
+                    explore
+                </span>
+
+                <strong>Longitude</strong>
+
+                <span id="lon">--</span>
+
+            </p>
+
+            <p>
+
+                <span class="material-symbols-outlined icon">
+                    navigation
+                </span>
+
+                <strong>Heading</strong>
+
+                <span id="heading">--</span>
+
+            </p>
+
+            <p>
+
+                <span class="material-symbols-outlined icon">
+                    near_me
+                </span>
+
+                <strong>Direction</strong>
+
+                <span id="direction">--</span>
+
+            </p>
+
+        </div>
+
+        <!-- Compass -->
+
+        <div class="compass-container">
+
+            <div class="compass">
+
+                <div
+                    class="compass-arrow"
+                    id="compassArrow">
+                </div>
+
+                <div class="compass-center"></div>
+
+                <div
+                    class="heading-value"
+                    id="headingValue">
+                    --
+                </div>
+
+                <div class="north">N</div>
+
+                <div class="east">E</div>
+
+                <div class="south">S</div>
+
+                <div class="west">W</div>
+
+            </div>
+
+        </div>
+
+        <!-- Buttons -->
+
+        <button id="enableCompass">
+
+            <span class="material-symbols-outlined">
+
+                explore
+
+            </span>
+
+            Enable Compass
+
+        </button>
+
+        <button id="capture">
+
+            <span class="material-symbols-outlined">
+
+                photo_camera
+
+            </span>
+
+            Capture Photo
+
+        </button>
+
+        <!-- Footer -->
+
+        <footer>
+
+            <hr>
+
+            <p>
+
+                Developed by
+
+                <strong>Le Doan Minh Thu</strong>
+
+            </p>
+
+            <p>
+
+                Faculty of Electrical Engineering<br>
+
+                International University - VNU HCM
+
+            </p>
+
+        </footer>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

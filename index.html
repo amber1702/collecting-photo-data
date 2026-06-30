@@ -5,21 +5,16 @@
 
     <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-    <title>
-        Collecting Photo Data
-    </title>
+    <title>Mapping Dataset Collecting</title>
 
-    <link
-        rel="stylesheet"
-        href="style.css">
+    <link rel="stylesheet"
+          href="style.css">
 
-    <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 
 </head>
 
@@ -27,13 +22,13 @@
 
 <div class="container">
 
-    <!-- ========================= -->
+    <!-- ===================================== -->
     <!-- Header -->
-    <!-- ========================= -->
+    <!-- ===================================== -->
 
     <div class="header">
 
-        <div>
+        <div class="title-section">
 
             <h1>
                 Mapping Dataset Collecting
@@ -43,7 +38,8 @@
                 Indoor Semantic Mapping Dataset
             </p>
 
-            <button id="enableCompass" class="compass-link">
+            <button id="enableCompass"
+                    class="compass-link">
 
                 <span class="material-symbols-outlined">
                     explore
@@ -55,56 +51,31 @@
 
         </div>
 
-        <div class="compass-small">
-
-            <div class="compass">
-
-                <div
-                    class="compass-arrow"
-                    id="compassArrow">
-                </div>
-
-                <div class="compass-center"></div>
-
-                <div
-                    class="heading-value"
-                    id="headingValue">
-                    --
-                </div>
-
-                <div class="north">N</div>
-                <div class="east">E</div>
-                <div class="south">S</div>
-                <div class="west">W</div>
-
-            </div>
-
-        </div>
-
-    </div>
-
         <!-- Small Compass -->
 
         <div class="compass-small">
 
             <div class="compass">
 
-                <div
-                    class="compass-arrow"
-                    id="compassArrow">
+                <div class="compass-arrow"
+                     id="compassArrow">
                 </div>
 
                 <div class="compass-center"></div>
 
-                <div
-                    class="heading-value"
-                    id="headingValue">
+                <div class="heading-value"
+                     id="headingValue">
+
                     --
+
                 </div>
 
                 <div class="north">N</div>
+
                 <div class="east">E</div>
+
                 <div class="south">S</div>
+
                 <div class="west">W</div>
 
             </div>
@@ -113,27 +84,22 @@
 
     </div>
 
-    <!-- ========================= -->
+    <!-- ===================================== -->
     <!-- Camera -->
-    <!-- ========================= -->
+    <!-- ===================================== -->
 
     <video
-
         id="video"
-
         autoplay
-
         muted
-
         playsinline>
-
     </video>
 
     <canvas id="canvas"></canvas>
 
-    <!-- ========================= -->
+    <!-- ===================================== -->
     <!-- Current Milestone -->
-    <!-- ========================= -->
+    <!-- ===================================== -->
 
     <div class="milestone-card">
 
@@ -143,11 +109,8 @@
 
         </div>
 
-        <div
-
-            id="milestoneName"
-
-            class="milestone-name">
+        <div id="milestoneName"
+             class="milestone-name">
 
             Not Created
 
@@ -155,9 +118,9 @@
 
     </div>
 
-    <!-- ========================= -->
-    <!-- Information -->
-    <!-- ========================= -->
+    <!-- ===================================== -->
+    <!-- GPS / Compass Info -->
+    <!-- ===================================== -->
 
     <div class="info-grid">
 
@@ -219,17 +182,14 @@
 
     </div>
 
-    <!-- ========================= -->
+    <!-- ===================================== -->
     <!-- Buttons -->
-    <!-- ========================= -->
+    <!-- ===================================== -->
 
     <div class="button-group">
 
-        <button
-
-            id="newMilestone"
-
-            class="orange">
+        <button id="newMilestone"
+                class="orange">
 
             <span class="material-symbols-outlined">
 
@@ -241,11 +201,8 @@
 
         </button>
 
-        <button
-
-            id="capture"
-
-            class="blue">
+        <button id="capture"
+                class="blue">
 
             <span class="material-symbols-outlined">
 
@@ -259,9 +216,9 @@
 
     </div>
 
-    <!-- ========================= -->
+    <!-- ===================================== -->
     <!-- Status -->
-    <!-- ========================= -->
+    <!-- ===================================== -->
 
     <div class="status-card">
 
@@ -279,10 +236,9 @@
 
     </div>
 
-
-    <!-- ========================= -->
+    <!-- ===================================== -->
     <!-- Footer -->
-    <!-- ========================= -->
+    <!-- ===================================== -->
 
     <footer>
 

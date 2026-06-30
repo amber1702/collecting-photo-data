@@ -559,4 +559,47 @@ footer hr{
 
     }
 
+    /* Small Enable Compass button */
+
+    .compass-link{
+
+        margin-top:8px;
+
+        display:inline-flex;
+
+        align-items:center;
+
+        gap:5px;
+
+        padding:6px 10px;
+
+        border:none;
+
+        border-radius:10px;
+
+        background:#F59E0B;
+
+        color:white;
+
+        font-size:13px;
+
+        font-weight:600;
+
+        cursor:pointer;
+
+        transition:.2s;
+
+    }
+
+    .compass-link:hover{
+
+        background:#D97706;
+
+    }
+
+    .compass-link .material-symbols-outlined{
+
+        font-size:18px;
+
+    }
 }

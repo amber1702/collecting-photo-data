@@ -535,7 +535,7 @@ async function uploadToDrive(imageBase64){
 
                 headers:{
 
-                    "Content-Type":"application/json"
+                    "Content-Type":"text/plain;charset=utf-8"
 
                 },
 
@@ -545,36 +545,11 @@ async function uploadToDrive(imageBase64){
 
         );
 
-        // =============================
-        // Read Response
-        // =============================
-
         const text = await response.text();
 
-        console.log("Server Response:");
-        
         console.log(text);
-        
-        if(!response.ok){
-        
-            throw new Error(
-                "HTTP " + response.status
-            );
-        
-        }
-        
-        let result;
-        
-        try{
-        
-            result = JSON.parse(text);
-        
-        }
-        catch{
-        
-            throw new Error(text);
-        
-        }
+
+        const result = JSON.parse(text);
 
         // =============================
         // Upload Success

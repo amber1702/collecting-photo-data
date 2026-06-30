@@ -85,6 +85,56 @@ function setStatus(text,color="#16A34A"){
 }
 
 setStatus("Ready");
+enableCompassButton.addEventListener(
+
+    "click",
+
+    async function(){
+
+        if(
+
+            typeof DeviceOrientationEvent !== "undefined"
+
+            &&
+
+            typeof DeviceOrientationEvent.requestPermission === "function"
+
+        ){
+
+            const permission =
+
+                await DeviceOrientationEvent.requestPermission();
+
+            if(permission==="granted"){
+
+                window.addEventListener(
+
+                    "deviceorientation",
+
+                    handleIOSCompass,
+
+                    true
+
+                );
+
+                setStatus("Compass Enabled");
+
+            }
+
+            else{
+
+                setStatus("Compass Denied","#DC2626");
+
+            }
+
+        }
+
+    }
+
+);
+
+const enableCompassButton =
+document.getElementById("enableCompass");
 
 
 // ======================================================

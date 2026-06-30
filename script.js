@@ -274,65 +274,57 @@ function updateCompass(value){
 
 
     // ======================================================
-    // iPhone Compass
+    // iPhone Compass Only
     // ======================================================
 
+    const enableCompassButton =
+    document.getElementById("enableCompass");
+
     async function enableCompassIOS(){
-        console.log("Enable Compass clicked");
-        alert("Button clicked");
 
         if(
-
-            typeof DeviceOrientationEvent !== "undefined"
-
-            &&
-
-            typeof DeviceOrientationEvent.requestPermission === "function"
-
+            typeof DeviceOrientationEvent === "undefined" ||
+            typeof DeviceOrientationEvent.requestPermission !== "function"
         ){
 
-            try{
+            alert("This device does not support iPhone compass.");
 
-                const permission =
+            return;
 
-                await DeviceOrientationEvent.requestPermission();
+        }
 
-                if(permission === "granted"){
+        try{
 
-                    window.addEventListener(
+            const permission =
+            await DeviceOrientationEvent.requestPermission();
 
-                        "deviceorientation",
+            console.log("Permission:", permission);
 
-                        handleIOSCompass,
+            if(permission !== "granted"){
 
-                        true
+                alert("Compass permission denied.");
 
-                    );
-
-                    enableCompassButton.style.display = "none";
-
-                    setStatus("Compass Ready");
-
-                }
-                else{
-
-                    setStatus(
-
-                        "Compass Permission Denied",
-
-                        "#DC2626"
-
-                    );
-
-                }
+                return;
 
             }
 
-            catch(err){
+            window.addEventListener(
+                "deviceorientation",
+                handleIOSCompass,
+                true
+            );
 
-                console.error(err);
+            enableCompassButton.style.display = "none";
 
-            }
+            setStatus("Compass Ready");
+
+        }
+
+        catch(err){
+
+            console.error(err);
+
+            alert(err);
 
         }
 
@@ -341,28 +333,24 @@ function updateCompass(value){
 
     function handleIOSCompass(event){
 
-        if(event.webkitCompassHeading == null)
+        console.log(event);
+
+        if(event.webkitCompassHeading == null){
+
             return;
 
-        updateCompass(
+        }
 
-            event.webkitCompassHeading
+        const value = event.webkitCompassHeading;
 
-        );
+        updateCompass(value);
 
     }
 
 
-    // ======================================================
-    // Enable Compass Button
-    // ======================================================
-
     enableCompassButton.addEventListener(
-
         "click",
-
         enableCompassIOS
-
     );
     heading = value;
 

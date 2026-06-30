@@ -225,156 +225,149 @@ function getDirection(angle){
 }
 
 
-// ======================================================
-// Update Compass
-// ======================================================
+// =============================================// Update Compass UI// =============================================
 
-function updateCompass(value){
-    // ======================================================
-    // Android Compass
-    // ======================================================
+function updateCompass(heading) {
 
-    function handleAndroidCompass(event){
+headingText.textContent =
+heading.toFixed(1) + "°";
 
-        if(event.alpha == null)
-            return;
+directionText.textContent =
+getDirection(heading);
 
-        const value = 360 - event.alpha;
+if (headingValue) {
 
-        updateCompass(value);
+    headingValue.textContent =
+    heading.toFixed(0) + "°";
 
-    }
+}
 
-    if ("ondeviceorientationabsolute" in window){
+if (arrow) {
 
-        window.addEventListener(
+    arrow.style.transform =
+    `translateX(-50%) rotate(${heading}deg)`;
 
-            "deviceorientationabsolute",
+}
 
-            handleAndroidCompass,
+}
 
-            true
+// =============================================// Android Compass// =============================================
 
-        );
+function handleAndroidCompass(event) {
 
-    }
-    else{
+if (event.alpha == null)
+    return;
 
-        window.addEventListener(
+const heading =
+(360 - event.alpha + 360) % 360;
 
-            "deviceorientation",
+updateCompass(heading);
 
-            handleAndroidCompass,
+}
 
-            true
+if ("ondeviceorientationabsolute" in window) {
 
-        );
+window.addEventListener(
 
-    }
+    "deviceorientationabsolute",
 
+    handleAndroidCompass,
 
-    // ======================================================
-    // iPhone Compass Only
-    // ======================================================
+    true
 
-    const enableCompassButton =
-    document.getElementById("enableCompass");
+);
 
-    async function enableCompassIOS(){
+}else {
 
-        if(
-            typeof DeviceOrientationEvent === "undefined" ||
-            typeof DeviceOrientationEvent.requestPermission !== "function"
-        ){
+window.addEventListener(
 
-            alert("This device does not support iPhone compass.");
+    "deviceorientation",
 
-            return;
+    handleAndroidCompass,
 
-        }
+    true
 
-        try{
+);
 
-            const permission =
-            await DeviceOrientationEvent.requestPermission();
+}
 
-            console.log("Permission:", permission);
+// =============================================// iPhone Compass// =============================================
 
-            if(permission !== "granted"){
+async function enableCompassIOS() {
 
-                alert("Compass permission denied.");
+if (
 
-                return;
+    typeof DeviceOrientationEvent !== "undefined"
 
-            }
+    &&
+
+    typeof DeviceOrientationEvent
+        .requestPermission === "function"
+
+) {
+
+    try {
+
+        const permission =
+        await DeviceOrientationEvent
+            .requestPermission();
+
+        if (permission === "granted") {
 
             window.addEventListener(
+
                 "deviceorientation",
+
                 handleIOSCompass,
+
                 true
+
             );
 
-            enableCompassButton.style.display = "none";
-
-            setStatus("Compass Ready");
-
         }
 
-        catch(err){
+        else {
 
-            console.error(err);
-
-            alert(err);
+            alert("Compass permission denied.");
 
         }
 
     }
 
+    catch (err) {
 
-    function handleIOSCompass(event){
-
-        console.log(event);
-
-        if(event.webkitCompassHeading == null){
-
-            return;
-
-        }
-
-        const value = event.webkitCompassHeading;
-
-        updateCompass(value);
+        console.error(err);
 
     }
 
+}
 
-    enableCompassButton.addEventListener(
-        "click",
-        enableCompassIOS
-    );
-    heading = value;
+}
 
-    direction = getDirection(value);
+function handleIOSCompass(event) {
 
-    headingText.innerText =
-    value.toFixed(1) + "°";
+if (event.webkitCompassHeading == null)
+    return;
 
-    directionText.innerText =
-    direction;
+updateCompass(
 
-    if(headingValue){
+    event.webkitCompassHeading
 
-        headingValue.innerText =
-        Math.round(value) + "°";
+);
 
-    }
+}
+    
+// =============================================// Enable Compass Button// =============================================
 
-    if(compassArrow){
+if (enableCompassButton) {
 
-        compassArrow.style.transform =
-        `translateX(-50%) rotate(${value}deg)`;
+enableCompassButton.addEventListener(
 
-    }
+    "click",
+
+    enableCompassIOS
+
+);
 
 }
 

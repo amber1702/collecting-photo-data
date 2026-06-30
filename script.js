@@ -1,25 +1,28 @@
 // ======================================================
-// Mapping Dataset Collecting
+// Collecting Photo Data
 // script.js
 // Part 1
-// Camera + GPS + Compass
+// Variables + Camera + GPS + Compass
 // ======================================================
 
 
 // ======================================================
-// Google Apps Script URL
+// Google Apps Script
 // ======================================================
 
 const SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbwJPbxETXFlI5_phZ5NFcdc7qak6KGpjpyznElrEAHmyyikpNqegzVLZTUOnKo9WK0T/exec";
+"https://script.google.com/macros/s/AKfycbx3RGgEHIvieNEsuzTsyEeUYS6TVeFQUTWPu6ytbHSnExJOvWRKJACr4knFxiiu7p1j/exec";
 
 
 // ======================================================
 // HTML Elements
 // ======================================================
 
-const video = document.getElementById("video");
-const canvas = document.getElementById("canvas");
+const video =
+document.getElementById("video");
+
+const canvas =
+document.getElementById("canvas");
 
 const captureButton =
 document.getElementById("capture");
@@ -27,14 +30,11 @@ document.getElementById("capture");
 const milestoneButton =
 document.getElementById("newMilestone");
 
-const enableCompassButton =
-document.getElementById("enableCompass");
+const statusText =
+document.getElementById("status");
 
 const milestoneText =
 document.getElementById("milestoneName");
-
-const statusText =
-document.getElementById("status");
 
 const latitudeText =
 document.getElementById("lat");
@@ -53,6 +53,9 @@ document.getElementById("headingValue");
 
 const compassArrow =
 document.getElementById("compassArrow");
+
+const enableCompassButton =
+document.getElementById("enableCompass");
 
 
 // ======================================================
@@ -78,7 +81,7 @@ let direction = "N";
 
 function setStatus(text,color="#16A34A"){
 
-    statusText.textContent = text;
+    statusText.innerText = text;
 
     statusText.style.color = color;
 
@@ -109,7 +112,9 @@ async function startCamera(){
             video:{
 
                 facingMode:{
+
                     ideal:"environment"
+
                 }
 
             },
@@ -143,31 +148,35 @@ startCamera();
 // GPS
 // ======================================================
 
+function updateLocation(position){
+
+    latitude =
+    position.coords.latitude.toFixed(6);
+
+    longitude =
+    position.coords.longitude.toFixed(6);
+
+    latitudeText.innerText =
+    latitude;
+
+    longitudeText.innerText =
+    longitude;
+
+}
+
+function locationError(error){
+
+    console.log(error);
+
+}
+
 if(navigator.geolocation){
 
     navigator.geolocation.watchPosition(
 
-        function(position){
+        updateLocation,
 
-            latitude =
-            position.coords.latitude.toFixed(6);
-
-            longitude =
-            position.coords.longitude.toFixed(6);
-
-            latitudeText.textContent =
-            latitude;
-
-            longitudeText.textContent =
-            longitude;
-
-        },
-
-        function(error){
-
-            console.log(error);
-
-        },
+        locationError,
 
         {
 
@@ -185,7 +194,7 @@ if(navigator.geolocation){
 
 
 // ======================================================
-// Compass
+// Direction
 // ======================================================
 
 function getDirection(angle){
@@ -216,154 +225,177 @@ function getDirection(angle){
 }
 
 
+// ======================================================
+// Update Compass
+// ======================================================
+
 function updateCompass(value){
+    // ======================================================
+    // Android Compass
+    // ======================================================
 
-    heading = value;
+    function handleAndroidCompass(event){
 
-    direction = getDirection(value);
+        if(event.alpha == null)
+            return;
 
-    headingText.textContent =
-    value.toFixed(1) + "°";
+        const value = 360 - event.alpha;
 
-    directionText.textContent =
-    direction;
+        updateCompass(value);
 
-    headingValue.textContent =
-    Math.round(value) + "°";
+    }
 
-    compassArrow.style.transform =
-    `translateX(-50%) rotate(${value}deg)`;
+    if ("ondeviceorientationabsolute" in window){
 
-}
+        window.addEventListener(
 
+            "deviceorientationabsolute",
 
-// ======================================================
-// Android Compass
-// ======================================================
+            handleAndroidCompass,
 
-function handleAndroidCompass(event){
+            true
 
-    if(event.alpha==null)
-        return;
+        );
 
-    const value =
-    360 - event.alpha;
+    }
+    else{
 
-    updateCompass(value);
+        window.addEventListener(
 
-}
+            "deviceorientation",
 
-if("ondeviceorientationabsolute" in window){
+            handleAndroidCompass,
 
-    window.addEventListener(
+            true
 
-        "deviceorientationabsolute",
+        );
 
-        handleAndroidCompass,
-
-        true
-
-    );
-
-}
-else{
-
-    window.addEventListener(
-
-        "deviceorientation",
-
-        handleAndroidCompass,
-
-        true
-
-    );
-
-}
+    }
 
 
-// ======================================================
-// iPhone Compass
-// ======================================================
+    // ======================================================
+    // iPhone Compass
+    // ======================================================
 
-async function enableCompassIOS(){
+    async function enableCompassIOS(){
 
-    if(
+        if(
 
-        typeof DeviceOrientationEvent !== "undefined"
+            typeof DeviceOrientationEvent !== "undefined"
 
-        &&
+            &&
 
-        typeof DeviceOrientationEvent.requestPermission === "function"
+            typeof DeviceOrientationEvent.requestPermission === "function"
 
-    ){
+        ){
 
-        try{
+            try{
 
-            const permission =
+                const permission =
 
-            await DeviceOrientationEvent.requestPermission();
+                await DeviceOrientationEvent.requestPermission();
 
-            if(permission==="granted"){
+                if(permission === "granted"){
 
-                window.addEventListener(
+                    window.addEventListener(
 
-                    "deviceorientation",
+                        "deviceorientation",
 
-                    handleIOSCompass,
+                        handleIOSCompass,
 
-                    true
+                        true
 
-                );
+                    );
 
-                enableCompassButton.style.display="none";
+                    enableCompassButton.style.display = "none";
 
-                setStatus("Compass Ready");
+                    setStatus("Compass Ready");
+
+                }
+                else{
+
+                    setStatus(
+
+                        "Compass Permission Denied",
+
+                        "#DC2626"
+
+                    );
+
+                }
+
+            }
+
+            catch(err){
+
+                console.error(err);
 
             }
 
         }
 
-        catch(err){
+    }
 
-            console.error(err);
 
-        }
+    function handleIOSCompass(event){
+
+        if(event.webkitCompassHeading == null)
+            return;
+
+        updateCompass(
+
+            event.webkitCompassHeading
+
+        );
+
+    }
+
+
+    // ======================================================
+    // Enable Compass Button
+    // ======================================================
+
+    enableCompassButton.addEventListener(
+
+        "click",
+
+        enableCompassIOS
+
+    );
+    heading = value;
+
+    direction = getDirection(value);
+
+    headingText.innerText =
+    value.toFixed(1) + "°";
+
+    directionText.innerText =
+    direction;
+
+    if(headingValue){
+
+        headingValue.innerText =
+        Math.round(value) + "°";
+
+    }
+
+    if(compassArrow){
+
+        compassArrow.style.transform =
+        `translateX(-50%) rotate(${value}deg)`;
 
     }
 
 }
 
-
-function handleIOSCompass(event){
-
-    if(event.webkitCompassHeading==null)
-        return;
-
-    updateCompass(
-
-        event.webkitCompassHeading
-
-    );
-
-}
-
-
-enableCompassButton.addEventListener(
-
-    "click",
-
-    enableCompassIOS
-
-);
-
 // ======================================================
 // Part 2
-// New Milestone + Capture
+// Milestone + Capture
 // ======================================================
 
 
 // ======================================================
-// Create New Milestone
+// New Milestone
 // ======================================================
 
 milestoneButton.addEventListener(
@@ -372,9 +404,7 @@ milestoneButton.addEventListener(
 
     async function(){
 
-        milestoneButton.disabled = true;
-
-        setStatus("Creating Milestone...","#F59E0B");
+        setStatus("Creating Milestone...","#D97706");
 
         try{
 
@@ -387,9 +417,7 @@ milestoneButton.addEventListener(
                     method:"POST",
 
                     headers:{
-
                         "Content-Type":"text/plain;charset=utf-8"
-
                     },
 
                     body:JSON.stringify({
@@ -402,26 +430,12 @@ milestoneButton.addEventListener(
 
             );
 
-            if(!response.ok){
-
-                throw new Error(
-
-                    "HTTP " + response.status
-
-                );
-
-            }
-
             const result =
             await response.json();
 
             if(!result.success){
 
-                throw new Error(
-
-                    result.error
-
-                );
+                throw new Error(result.error);
 
             }
 
@@ -430,12 +444,14 @@ milestoneButton.addEventListener(
 
             imageCounter = 0;
 
-            milestoneText.textContent =
+            milestoneText.innerText =
             currentMilestone;
 
             setStatus(
 
-                "Milestone Ready"
+                "Milestone Ready",
+
+                "#16A34A"
 
             );
 
@@ -445,8 +461,6 @@ milestoneButton.addEventListener(
 
             console.error(err);
 
-            alert(err.message);
-
             setStatus(
 
                 "Milestone Error",
@@ -455,11 +469,7 @@ milestoneButton.addEventListener(
 
             );
 
-        }
-
-        finally{
-
-            milestoneButton.disabled = false;
+            alert(err.message);
 
         }
 
@@ -469,7 +479,7 @@ milestoneButton.addEventListener(
 
 
 // ======================================================
-// Capture Button
+// Capture
 // ======================================================
 
 captureButton.addEventListener(
@@ -478,7 +488,7 @@ captureButton.addEventListener(
 
     async function(){
 
-        if(currentMilestone===""){
+        if(currentMilestone==""){
 
             alert(
 
@@ -490,9 +500,9 @@ captureButton.addEventListener(
 
         }
 
-        captureButton.disabled = true;
+        captureButton.disabled=true;
 
-        captureButton.style.opacity = "0.6";
+        captureButton.style.opacity="0.6";
 
         setStatus(
 
@@ -504,15 +514,11 @@ captureButton.addEventListener(
 
         try{
 
-            // ==========================
-            // Resize to 512 x 512
-            // ==========================
+            canvas.width=512;
 
-            canvas.width = 512;
+            canvas.height=512;
 
-            canvas.height = 512;
-
-            const ctx =
+            const ctx=
             canvas.getContext("2d");
 
             ctx.drawImage(
@@ -529,11 +535,7 @@ captureButton.addEventListener(
 
             );
 
-            // ==========================
-            // Convert to Base64
-            // ==========================
-
-            const imageBase64 =
+            const imageBase64=
 
                 canvas
 
@@ -547,23 +549,13 @@ captureButton.addEventListener(
 
                 .split(",")[1];
 
-            // ==========================
-            // Upload
-            // ==========================
-
-            const success =
+            imageCounter++;
 
             await uploadImage(
 
                 imageBase64
 
             );
-
-            if(success){
-
-                imageCounter++;
-
-            }
 
         }
 
@@ -581,14 +573,155 @@ captureButton.addEventListener(
 
         }
 
-        finally{
+        captureButton.disabled=false;
 
-            captureButton.disabled = false;
-
-            captureButton.style.opacity = "1";
-
-        }
+        captureButton.style.opacity="1";
 
     }
 
 );
+
+// ======================================================
+// Part 3
+// Upload Image
+// ======================================================
+
+async function uploadImage(imageBase64){
+
+    setStatus("Uploading...","#2563EB");
+
+    try{
+
+        const payload={
+
+            action:"upload",
+
+            milestone:currentMilestone,
+
+            imageCounter:imageCounter,
+
+            latitude:latitude,
+
+            longitude:longitude,
+
+            heading:heading,
+
+            direction:direction,
+
+            timestamp:new Date().toISOString(),
+
+            image:imageBase64
+
+        };
+
+        const response = await fetch(
+
+            SCRIPT_URL,
+
+            {
+
+                method:"POST",
+
+                headers:{
+
+                    "Content-Type":"text/plain;charset=utf-8"
+
+                },
+
+                body:JSON.stringify(payload)
+
+            }
+
+        );
+
+        if(!response.ok){
+
+            throw new Error(
+
+                "HTTP " + response.status
+
+            );
+
+        }
+
+        const result =
+        await response.json();
+
+        if(!result.success){
+
+            throw new Error(
+
+                result.error
+
+            );
+
+        }
+
+        setStatus(
+
+            "Uploaded ✓",
+
+            "#16A34A"
+
+        );
+
+        console.log(
+
+            "Saved:",
+
+            result.filename
+
+        );
+
+    }
+
+    catch(err){
+
+        console.error(err);
+
+        setStatus(
+
+            "Upload Failed",
+
+            "#DC2626"
+
+        );
+
+        alert(err.message);
+
+    }
+
+}
+
+
+
+// ======================================================
+// Auto Restore Status
+// ======================================================
+
+function resetStatus(){
+
+    setTimeout(function(){
+
+        setStatus("Ready");
+
+    },1500);
+
+}
+
+
+
+// ======================================================
+// Optional
+// Restore Ready after Upload
+// ======================================================
+
+const originalUploadImage = uploadImage;
+
+uploadImage = async function(imageBase64){
+
+    await originalUploadImage(imageBase64);
+
+    resetStatus();
+
+}

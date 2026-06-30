@@ -278,6 +278,8 @@ function updateCompass(value){
     // ======================================================
 
     async function enableCompassIOS(){
+        console.log("Enable Compass clicked");
+        alert("Button clicked");
 
         if(
 

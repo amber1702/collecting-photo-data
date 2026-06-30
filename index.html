@@ -5,25 +5,39 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-    <title>Collecting Photo Data</title>
+    <title>
+        Collecting Photo Data
+    </title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css">
 
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 
 </head>
 
 <body>
 
+<div class="container">
+
+    <!-- ========================= -->
+    <!-- Header -->
+    <!-- ========================= -->
+
     <div class="header">
 
-        <div class="title-section">
+        <div>
 
-            <h1>Collecting Photo Data</h1>
+            <h1>
+                Collecting Photo Data
+            </h1>
 
             <p class="subtitle">
                 Indoor Semantic Mapping Dataset Collection
@@ -31,7 +45,9 @@
 
         </div>
 
-        <div class="mini-compass">
+        <!-- Small Compass -->
+
+        <div class="compass-small">
 
             <div class="compass">
 
@@ -59,124 +75,207 @@
 
     </div>
 
+    <!-- ========================= -->
+    <!-- Camera -->
+    <!-- ========================= -->
+
     <video
+
         id="video"
+
         autoplay
+
         muted
+
         playsinline>
+
     </video>
 
     <canvas id="canvas"></canvas>
 
-        <!-- GPS + Heading -->
+    <!-- ========================= -->
+    <!-- Current Milestone -->
+    <!-- ========================= -->
 
-        <div class="info">
+    <div class="milestone-card">
 
-            <div class="card">
+        <div class="label">
 
-                <span class="material-symbols-outlined">
-                    location_on
-                </span>
-
-                <label>Lat</label>
-
-                <span id="lat">--</span>
-
-            </div>
-
-            <div class="card">
-
-                <span class="material-symbols-outlined">
-                    explore
-                </span>
-
-                <label>Lon</label>
-
-                <span id="lon">--</span>
-
-            </div>
-
-            <div class="card">
-
-                <span class="material-symbols-outlined">
-                    navigation
-                </span>
-
-                <label>Heading</label>
-
-                <span id="heading">--</span>
-
-            </div>
-
-            <div class="card">
-
-                <span class="material-symbols-outlined">
-                    near_me
-                </span>
-
-                <label>Direction</label>
-
-                <span id="direction">--</span>
-
-            </div>
+            Current Milestone
 
         </div>
 
+        <div
 
+            id="milestoneName"
 
-        <!-- Buttons -->
+            class="milestone-name">
 
-        <div class="button-row">
-
-            <button id="enableCompass">
-
-                <span class="material-symbols-outlined">
-                    explore
-                </span>
-
-                Enable Compass
-
-            </button>
-
-            <button id="capture">
-
-                <span class="material-symbols-outlined">
-                    photo_camera
-                </span>
-
-                Capture Photo
-
-            </button>
+            Not Created
 
         </div>
-
-        <!-- Footer -->
-
-        <footer>
-
-            <hr>
-
-            <p>
-
-                Developed by
-
-                <strong>Le Doan Minh Thu</strong>
-
-            </p>
-
-            <p>
-
-                Faculty of Electrical Engineering<br>
-
-                International University - VNU HCM
-
-            </p>
-
-        </footer>
 
     </div>
 
-    <script src="script.js"></script>
+    <!-- ========================= -->
+    <!-- Information -->
+    <!-- ========================= -->
+
+    <div class="info-grid">
+
+        <div class="info-item">
+
+            <span class="material-symbols-outlined">
+
+                location_on
+
+            </span>
+
+            <label>Lat</label>
+
+            <p id="lat">--</p>
+
+        </div>
+
+        <div class="info-item">
+
+            <span class="material-symbols-outlined">
+
+                explore
+
+            </span>
+
+            <label>Lon</label>
+
+            <p id="lon">--</p>
+
+        </div>
+
+        <div class="info-item">
+
+            <span class="material-symbols-outlined">
+
+                navigation
+
+            </span>
+
+            <label>Heading</label>
+
+            <p id="heading">--</p>
+
+        </div>
+
+        <div class="info-item">
+
+            <span class="material-symbols-outlined">
+
+                near_me
+
+            </span>
+
+            <label>Dir</label>
+
+            <p id="direction">--</p>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- Buttons -->
+    <!-- ========================= -->
+
+    <div class="button-group">
+
+        <button
+
+            id="newMilestone"
+
+            class="orange">
+
+            <span class="material-symbols-outlined">
+
+                create_new_folder
+
+            </span>
+
+            New Milestone
+
+        </button>
+
+        <button
+
+            id="capture"
+
+            class="blue">
+
+            <span class="material-symbols-outlined">
+
+                photo_camera
+
+            </span>
+
+            Capture
+
+        </button>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- Status -->
+    <!-- ========================= -->
+
+    <div class="status-card">
+
+        <label>
+
+            Status
+
+        </label>
+
+        <p id="status">
+
+            Ready
+
+        </p>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- Footer -->
+    <!-- ========================= -->
+
+    <footer>
+
+        <hr>
+
+        <p>
+
+            Developed by
+
+            <strong>
+
+                Le Doan Minh Thu
+
+            </strong>
+
+        </p>
+
+        <p>
+
+            School of Electrical Engineering
+
+            <br>
+
+            International University - VNU HCM
+
+        </p>
+
+    </footer>
+
+</div>
+
+<script src="script.js"></script>
 
 </body>
 

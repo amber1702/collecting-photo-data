@@ -11,7 +11,7 @@
 // ======================================================
 
 const SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbx3RGgEHIvieNEsuzTsyEeUYS6TVeFQUTWPu6ytbHSnExJOvWRKJACr4knFxiiu7p1j/exec";
+"https://script.google.com/macros/s/AKfycbwJPbxETXFlI5_phZ5NFcdc7qak6KGpjpyznElrEAHmyyikpNqegzVLZTUOnKo9WK0T/exec";
 
 
 // ======================================================

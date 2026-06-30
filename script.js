@@ -352,13 +352,16 @@ if (enableCompassButton) {
 // Capture Photo
 // =============================================
 
+// =============================================
+// Part 2
+// Capture Photo
+// =============================================
+
 captureButton.addEventListener(
 
     "click",
 
     async function () {
-
-        // Không cho bấm liên tục
 
         captureButton.disabled = true;
 
@@ -379,11 +382,10 @@ captureButton.addEventListener(
         try {
 
             // =============================================
-            // Resize về 512x512
+            // Resize Image
             // =============================================
 
             canvas.width = 512;
-
             canvas.height = 512;
 
             const ctx = canvas.getContext("2d");
@@ -403,36 +405,22 @@ captureButton.addEventListener(
             );
 
             // =============================================
-            // Convert sang JPEG Base64
+            // Convert to Base64 JPEG
             // =============================================
 
-            const imageBase64 =
-
-                canvas
-
-                .toDataURL(
-
-                    "image/jpeg",
-
-                    0.9
-
-                )
-
+            const imageBase64 = canvas
+                .toDataURL("image/jpeg", 0.9)
                 .split(",")[1];
 
             // =============================================
             // Upload
             // =============================================
 
-            await uploadToDrive(
-
-                imageBase64
-
-            );
+            await uploadToDrive(imageBase64);
 
         }
 
-        catch(err){
+        catch (err) {
 
             console.error(err);
 
@@ -448,7 +436,11 @@ captureButton.addEventListener(
 
             `;
 
-            setTimeout(()=>{
+        }
+
+        finally {
+
+            setTimeout(() => {
 
                 captureButton.disabled = false;
 
@@ -466,7 +458,7 @@ captureButton.addEventListener(
 
                 `;
 
-            },2000);
+            }, 2000);
 
         }
 
@@ -544,7 +536,7 @@ async function uploadToDrive(imageBase64){
 
                 headers:{
 
-                    "Content-Type":"text/plain;charset=utf-8"
+                    "Content-Type":"application/json"
 
                 },
 
@@ -560,9 +552,30 @@ async function uploadToDrive(imageBase64){
 
         const text = await response.text();
 
+        console.log("Server Response:");
+        
         console.log(text);
-
-        const result = JSON.parse(text);
+        
+        if(!response.ok){
+        
+            throw new Error(
+                "HTTP " + response.status
+            );
+        
+        }
+        
+        let result;
+        
+        try{
+        
+            result = JSON.parse(text);
+        
+        }
+        catch{
+        
+            throw new Error(text);
+        
+        }
 
         // =============================
         // Upload Success

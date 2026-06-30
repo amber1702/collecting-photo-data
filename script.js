@@ -249,7 +249,7 @@ function updateCompass(value){
     if(compassArrow){
 
         compassArrow.style.transform =
-        `translateX(-50%) rotate(${value}deg)`;
+        `translate(-50%, -100%) rotate(${value}deg)`;
 
     }
 

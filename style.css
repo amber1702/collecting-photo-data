@@ -392,17 +392,17 @@ footer hr{
 
     width:6px;
 
-    height:42px;
+    height:38px;
 
     background:#D9534F;
 
     left:50%;
 
-    top:14px;
+    top:50%;
 
-    transform-origin:bottom center;
+    transform-origin:center bottom;
 
-    transform:translateX(-50%) rotate(0deg);
+    transform:translate(-50%, -100%) rotate(0deg);
 
     border-radius:6px;
 

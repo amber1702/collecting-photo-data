@@ -227,67 +227,31 @@ function getDirection(angle){
 
 // =============================================// Update Compass UI// =============================================
 
-function updateCompass(heading) {
+function updateCompass(value){
 
-headingText.textContent =
-heading.toFixed(1) + "°";
+    heading = value;
 
-directionText.textContent =
-getDirection(heading);
+    direction = getDirection(value);
 
-if (headingValue) {
+    headingText.innerText =
+    value.toFixed(1) + "°";
 
-    headingValue.textContent =
-    heading.toFixed(0) + "°";
+    directionText.innerText =
+    direction;
 
-}
+    if(headingValue){
 
-if (arrow) {
+        headingValue.innerText =
+        Math.round(value) + "°";
 
-    arrow.style.transform =
-    `translateX(-50%) rotate(${heading}deg)`;
+    }
 
-}
+    if(compassArrow){
 
-}
+        compassArrow.style.transform =
+        `translateX(-50%) rotate(${value}deg)`;
 
-// =============================================// Android Compass// =============================================
-
-function handleAndroidCompass(event) {
-
-if (event.alpha == null)
-    return;
-
-const heading =
-(360 - event.alpha + 360) % 360;
-
-updateCompass(heading);
-
-}
-
-if ("ondeviceorientationabsolute" in window) {
-
-window.addEventListener(
-
-    "deviceorientationabsolute",
-
-    handleAndroidCompass,
-
-    true
-
-);
-
-}else {
-
-window.addEventListener(
-
-    "deviceorientation",
-
-    handleAndroidCompass,
-
-    true
-
-);
+    }
 
 }
 

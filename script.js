@@ -461,27 +461,37 @@ captureButton.addEventListener(
 
         try{
 
-            canvas.width=512;
-
-            canvas.height=512;
-
-            const ctx=
-            canvas.getContext("2d");
-
+            const ctx = canvas.getContext("2d");
+            canvas.width = 512;
+            canvas.height = 512;
+            
+            const videoWidth = video.videoWidth;
+            const videoHeight = video.videoHeight;
+            
+            // Crop thành hình vuông
+            
+            const cropSize = Math.min(videoWidth, videoHeight);
+            
+            const sx = (videoWidth - cropSize) / 2;
+            const sy = (videoHeight - cropSize) / 2;
+            
             ctx.drawImage(
-
+            
                 video,
-
+            
+                sx,
+                sy,
+            
+                cropSize,
+                cropSize,
+            
                 0,
-
                 0,
-
+            
                 512,
-
                 512
-
+            
             );
-
             const imageBase64=
 
                 canvas
